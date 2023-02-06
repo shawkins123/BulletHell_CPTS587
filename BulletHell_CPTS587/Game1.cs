@@ -15,13 +15,16 @@ namespace BulletHell_CPTS587
         private SpriteBatch _spriteBatch;
 
         private const string ASSET_NAME_SPRITESHEET = "sprite sheet";
-        private Texture2D _spriteSheetTexture;
+        public Texture2D _spriteSheetTexture;
 
         private PlayerCharacter _pc;
+        private EnemyManager _enemyManager;
+
+
         private Bullet _bullet;
         private EnemyBullet _ebullet;
-        private GruntA _gruntA;
-        private GruntB _gruntB;
+        private Grunts _grunt;
+
         private MidLevelBoss _mlboss;
         private EndLevelBoss _elboss;
 
@@ -60,23 +63,28 @@ namespace BulletHell_CPTS587
             _spriteSheetTexture = Content.Load<Texture2D>(ASSET_NAME_SPRITESHEET);
             _pc = new PlayerCharacter(_spriteSheetTexture, new Vector2(PC_START_X_POS - PlayerCharacter.PC_DEFAULT_SPRITE_W, PC_START_Y_POS + 105));
             _ipController = new InputController(_pc);
-
-           // _entityManager.addEntity(_pc);
+            _enemyManager = new EnemyManager(_spriteSheetTexture, _entityManager);
 
             //------just for displaying, delete when done using ------------//
             _bullet = new Bullet(_spriteSheetTexture, new Vector2(PC_START_X_POS, PC_START_Y_POS)); 
             _ebullet = new EnemyBullet(_spriteSheetTexture, new Vector2(PC_START_X_POS + 20, PC_START_Y_POS)); 
-            _gruntA = new GruntA(_spriteSheetTexture, new Vector2(PC_START_X_POS + 40, PC_START_Y_POS)); 
-            _gruntB = new GruntB(_spriteSheetTexture, new Vector2(PC_START_X_POS + 60, PC_START_Y_POS)); 
+        //    _gruntA = new GruntA(_spriteSheetTexture, new Vector2(PC_START_X_POS + 40, PC_START_Y_POS)); 
+         //   _gruntB = new GruntB(_spriteSheetTexture, new Vector2(PC_START_X_POS + 60, PC_START_Y_POS)); 
             _mlboss = new MidLevelBoss(_spriteSheetTexture, new Vector2(PC_START_X_POS + 80, PC_START_Y_POS)); 
             _elboss = new EndLevelBoss(_spriteSheetTexture, new Vector2(PC_START_X_POS + 110, PC_START_Y_POS));
             //------just for displaying, delete when done using ------------//
+
+            _entityManager.addEntity(_pc);
+            _entityManager.addEntity(_enemyManager);
+
+            _enemyManager.Initialize();
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
             base.Update(gameTime);
 
             _ipController.processControls(gameTime);
@@ -91,17 +99,19 @@ namespace BulletHell_CPTS587
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            _pc.Draw(_spriteBatch, gameTime);
+            //  _pc.Draw(_spriteBatch, gameTime);
+
+             _entityManager.Draw(_spriteBatch, gameTime);
            
-           // _entityManager.Draw(_spriteBatch, gameTime);
+
 
             //------just for displaying, delete when done using ------------//
             _spriteBatch.Draw(_spriteSheetTexture, new Vector2(10, 10), Color.White);
 
             _bullet.Draw(_spriteBatch, gameTime); 
             _ebullet.Draw(_spriteBatch, gameTime);
-            _gruntA.Draw(_spriteBatch, gameTime); 
-            _gruntB.Draw(_spriteBatch, gameTime); 
+          //  _gruntA.Draw(_spriteBatch, gameTime); 
+          //  _gruntB.Draw(_spriteBatch, gameTime); 
             _mlboss.Draw(_spriteBatch, gameTime); 
             _elboss.Draw(_spriteBatch, gameTime); 
             //------just for displaying, delete when done using ------------//
