@@ -46,12 +46,11 @@ namespace BulletHell_CPTS587.Entities
             }
 
         }
-
             public void addEntity(IGameEntity entity)
             {
                 if(entity is null)
                 {
-                    throw new ArgumentNullException(nameof(entity), "error");
+              //      throw new ArgumentNullException(nameof(entity), "error");
                 }
 
                 _entitiesToAdd.Add(entity);
