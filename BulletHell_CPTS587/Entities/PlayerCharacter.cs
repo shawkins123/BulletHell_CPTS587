@@ -58,11 +58,11 @@ namespace BulletHell_CPTS587.Entities
             Sprite.Draw(spriteBatch, this.Position);
         }
 
-        public int drawOrder => throw new NotImplementedException();
+        public int drawOrder { get; set; } 
 
         public void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+
         }
 
         public bool Die()
@@ -74,12 +74,10 @@ namespace BulletHell_CPTS587.Entities
         public void Move()
         {
 
-
-
-
-
         }
 
 
     }
+
+
 }
