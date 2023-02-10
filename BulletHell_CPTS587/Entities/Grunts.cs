@@ -12,18 +12,30 @@ namespace BulletHell_CPTS587.Entities
     public class Grunts : IGameEntity
     {
         private Sprite sprite;
+
+
         public Vector2 position; //figure out way to set to private??
         public Vector2 Position { get; set; }
+
+        private bool isAlive;
+
+        public bool IsAlive
+        {
+            get { return isAlive; }
+        }
+
+        private int spawnPoint;
+        public int SpawnPoint { get; set; }
         public Sprite Sprite { get; }
 
         public const int GA_DEFAULT_SPRITE_X = 70;
         public const int GA_DEFAULT_SPRITE_Y = 40;
-        public const int GA_DEFAULT_SPRITE_W = 20;
+        public const int GA_DEFAULT_SPRITE_W = 18;
         public const int GA_DEFAULT_SPRITE_H = 15;
 
-        public const int GB_DEFAULT_SPRITE_X = 70;
+        public const int GB_DEFAULT_SPRITE_X = 72;
         public const int GB_DEFAULT_SPRITE_Y = 0;
-        public const int GB_DEFAULT_SPRITE_W = 18;
+        public const int GB_DEFAULT_SPRITE_W = 16;
         public const int GB_DEFAULT_SPRITE_H = 15;
         public int drawOrder { get; set; } 
 
