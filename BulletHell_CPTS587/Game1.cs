@@ -19,6 +19,7 @@ namespace BulletHell_CPTS587
 
         private PlayerCharacter _pc;
         private EnemyManager _enemyManager;
+        private BossManager _bossManager;
 
 
         private Bullet _bullet;
@@ -35,14 +36,15 @@ namespace BulletHell_CPTS587
         public const int PC_START_Y_POS = 300;
 
         private EntityManager _entityManager;
-        private InputController _ipController; 
+        private InputController _ipController;
+        private Boss _boss;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _entityManager = new EntityManager(); 
+            _entityManager = new EntityManager();
         }
 
         protected override void Initialize()
@@ -66,18 +68,25 @@ namespace BulletHell_CPTS587
             _enemyManager = new EnemyManager(_spriteSheetTexture, _entityManager);
 
             //------just for displaying, delete when done using ------------//
-            _bullet = new Bullet(_spriteSheetTexture, new Vector2(PC_START_X_POS, PC_START_Y_POS)); 
-            _ebullet = new EnemyBullet(_spriteSheetTexture, new Vector2(PC_START_X_POS + 20, PC_START_Y_POS)); 
-        //    _gruntA = new GruntA(_spriteSheetTexture, new Vector2(PC_START_X_POS + 40, PC_START_Y_POS)); 
-         //   _gruntB = new GruntB(_spriteSheetTexture, new Vector2(PC_START_X_POS + 60, PC_START_Y_POS)); 
-            _mlboss = new MidLevelBoss(_spriteSheetTexture, new Vector2(PC_START_X_POS + 80, PC_START_Y_POS)); 
+            _bullet = new Bullet(_spriteSheetTexture, new Vector2(PC_START_X_POS, PC_START_Y_POS));
+            _ebullet = new EnemyBullet(_spriteSheetTexture, new Vector2(PC_START_X_POS + 20, PC_START_Y_POS));
+            //    _gruntA = new GruntA(_spriteSheetTexture, new Vector2(PC_START_X_POS + 40, PC_START_Y_POS)); 
+            //   _gruntB = new GruntB(_spriteSheetTexture, new Vector2(PC_START_X_POS + 60, PC_START_Y_POS)); 
+            _mlboss = new MidLevelBoss(_spriteSheetTexture, new Vector2(PC_START_X_POS + 80, PC_START_Y_POS));
             _elboss = new EndLevelBoss(_spriteSheetTexture, new Vector2(PC_START_X_POS + 110, PC_START_Y_POS));
             //------just for displaying, delete when done using ------------//
 
-            _entityManager.addEntity(_pc);
-            _entityManager.addEntity(_enemyManager);
+            //Constructor for mid level and end level bosses
+            _bossManager = new BossManager(_spriteSheetTexture, _entityManager);
 
+            _entityManager.addEntity(_pc);
+
+            _entityManager.addEntity(_enemyManager);
             _enemyManager.Initialize();
+
+            
+            _entityManager.addEntity(_bossManager);
+            _bossManager.Initialize();
         }
 
         protected override void Update(GameTime gameTime)
@@ -90,7 +99,7 @@ namespace BulletHell_CPTS587
             _ipController.processControls(gameTime);
 
             _entityManager.Update(gameTime);
-           
+
         }
 
         protected override void Draw(GameTime gameTime)
@@ -101,19 +110,19 @@ namespace BulletHell_CPTS587
             _spriteBatch.Begin();
             //  _pc.Draw(_spriteBatch, gameTime);
 
-             _entityManager.Draw(_spriteBatch, gameTime);
-           
+            _entityManager.Draw(_spriteBatch, gameTime);
+
 
 
             //------just for displaying, delete when done using ------------//
             _spriteBatch.Draw(_spriteSheetTexture, new Vector2(10, 10), Color.White);
 
-            _bullet.Draw(_spriteBatch, gameTime); 
+            _bullet.Draw(_spriteBatch, gameTime);
             _ebullet.Draw(_spriteBatch, gameTime);
-          //  _gruntA.Draw(_spriteBatch, gameTime); 
-          //  _gruntB.Draw(_spriteBatch, gameTime); 
-            _mlboss.Draw(_spriteBatch, gameTime); 
-            _elboss.Draw(_spriteBatch, gameTime); 
+            //  _gruntA.Draw(_spriteBatch, gameTime); 
+            //  _gruntB.Draw(_spriteBatch, gameTime); 
+            _mlboss.Draw(_spriteBatch, gameTime);
+            _elboss.Draw(_spriteBatch, gameTime);
             //------just for displaying, delete when done using ------------//
 
             _spriteBatch.End();
