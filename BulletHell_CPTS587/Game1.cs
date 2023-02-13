@@ -1,105 +1,194 @@
-﻿using BulletHell_CPTS587.Entities;
-using BulletHell_CPTS587.Graphics;
-using BulletHell_CPTS587.System;
+﻿using CPTS587.Entities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Numerics;
 
-//uses sprites from https://chasersgaming.itch.io/asset-pack-space-shooter-sms
 
-namespace BulletHell_CPTS587
+namespace CPTS587
 {
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private SpriteBatch spriteBatch;
+        private EntityManager entityManager;
+        private BulletManager bulletManager;
+        private ContentManager content;
+        private GameTime _gameTime;
 
-        private const string ASSET_NAME_SPRITESHEET = "sprite sheet";
-        public Texture2D _spriteSheetTexture;
+        private Texture2D backgroundTexture;
+        private Microsoft.Xna.Framework.Vector2 backgroundPos;
+        private Texture2D weGotDeathStar;
+        private Microsoft.Xna.Framework.Vector2 weGotDeathStarPos;
 
-        private PlayerCharacter _pc;
-        private EnemyManager _enemyManager;
-        private BossManager _bossManager;
+        private Texture2D ISD;
+        private Texture2D xWing;
+        private Texture2D bossATexture;
+        private Texture2D aWing;
+        private Texture2D rebelScum;
+        private Texture2D blasterGreen;
+        private Texture2D blasterBlue;
 
+        float elapsedTime = 0;
 
-        private Bullet _bullet;
-        private EnemyBullet _ebullet;
-        private Grunts _grunt;
+        private Player player;
+        private EnemyA enemyA;
+        private EnemyB enemyB;
 
-        private MidLevelBoss _mlboss;
-        private EndLevelBoss _elboss;
+        private int screenWidth;
+        private int screenHeight;
 
-        public const int WINDOW_WIDTH = 600;
-        public const int WINDOW_HEIGHT = 600;
+        bool xWingActive_1 = false;
+        bool xWingActive_2 = false;
+        bool xWingActive_3 = false;
 
-        public const int PC_START_X_POS = 300;
-        public const int PC_START_Y_POS = 300;
+        bool bossActive_A = false;
 
-        private EntityManager _entityManager;
-        private InputController _ipController;
-        private Boss _boss;
+        bool aWingActive_1 = false;
+        bool aWingActive_2 = false;
+        bool aWingActive_3 = false;
+
+        bool bossActive_B = false;
+
+        private bool isHalfSpeed = false;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _entityManager = new EntityManager();
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
 
-            _graphics.PreferredBackBufferWidth = WINDOW_WIDTH;
-            _graphics.PreferredBackBufferHeight = WINDOW_HEIGHT;
+            _graphics.PreferredBackBufferWidth = 1360;
+            _graphics.PreferredBackBufferHeight = 768;
             _graphics.ApplyChanges();
 
             base.Initialize();
+
+
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _spriteSheetTexture = Content.Load<Texture2D>(ASSET_NAME_SPRITESHEET);
-            _pc = new PlayerCharacter(_spriteSheetTexture, new Vector2(PC_START_X_POS - PlayerCharacter.PC_DEFAULT_SPRITE_W, PC_START_Y_POS + 105));
-            _ipController = new InputController(_pc);
-            _enemyManager = new EnemyManager(_spriteSheetTexture, _entityManager);
+            content = new ContentManager(Services, "Content");
 
-            //------just for displaying, delete when done using ------------//
-            _bullet = new Bullet(_spriteSheetTexture, new Vector2(PC_START_X_POS, PC_START_Y_POS));
-            _ebullet = new EnemyBullet(_spriteSheetTexture, new Vector2(PC_START_X_POS + 20, PC_START_Y_POS));
-            //    _gruntA = new GruntA(_spriteSheetTexture, new Vector2(PC_START_X_POS + 40, PC_START_Y_POS)); 
-            //   _gruntB = new GruntB(_spriteSheetTexture, new Vector2(PC_START_X_POS + 60, PC_START_Y_POS)); 
-            _mlboss = new MidLevelBoss(_spriteSheetTexture, new Vector2(PC_START_X_POS + 80, PC_START_Y_POS));
-            _elboss = new EndLevelBoss(_spriteSheetTexture, new Vector2(PC_START_X_POS + 110, PC_START_Y_POS));
-            //------just for displaying, delete when done using ------------//
+            backgroundTexture = Content.Load<Texture2D>("Background");
+            backgroundPos = new Microsoft.Xna.Framework.Vector2(0, 0);
 
-            //Constructor for mid level and end level bosses
-            _bossManager = new BossManager(_spriteSheetTexture, _entityManager);
+            weGotDeathStar = Content.Load<Texture2D>("weGotDeathStar");
+            weGotDeathStarPos = new Microsoft.Xna.Framework.Vector2(1220, 660);
 
-            _entityManager.addEntity(_pc);
-
-            _entityManager.addEntity(_enemyManager);
-            _enemyManager.Initialize();
+            entityManager = new EntityManager();
+            bulletManager = new BulletManager();
 
             
-            _entityManager.addEntity(_bossManager);
-            _bossManager.Initialize();
+
+            // load the player
+            screenWidth = GraphicsDevice.Viewport.Bounds.Width;
+            screenHeight = GraphicsDevice.Viewport.Bounds.Height;
+            ISD = Content.Load<Texture2D>("ISD");
+
+            player = new Player(ISD, screenWidth, screenHeight);
+
+            xWing = Content.Load<Texture2D>("xWing");
+            bossATexture = Content.Load<Texture2D>("BossA");
+            aWing = Content.Load<Texture2D>("AWing");
+            rebelScum = Content.Load<Texture2D>("BossB");
+
+            blasterGreen = Content.Load<Texture2D>("blasterGreen");
+            blasterBlue = Content.Load<Texture2D>("blasterBlue");
         }
 
-        protected override void Update(GameTime gameTime)
+        protected override void Update(GameTime _gameTime)
         {
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            base.Update(gameTime);
+            if (isHalfSpeed)
+            {
+                _gameTime = new GameTime(_gameTime.TotalGameTime, _gameTime.ElapsedGameTime / 2);
+            }
 
-            _ipController.processControls(gameTime);
+            if (Keyboard.GetState().IsKeyDown(Keys.Tab))
+            {
+                if (isHalfSpeed == true)
+                {
+                    isHalfSpeed = false;
+                }
+                else
+                {
+                    isHalfSpeed = true;
+                }
 
-            _entityManager.Update(gameTime);
+            }
 
+            // TODO: Add your update logic here
+
+
+            if (elapsedTime > 2 && xWingActive_1 != true)
+            {
+                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, bulletManager, new Microsoft.Xna.Framework.Vector2(0, 250), screenWidth, _gameTime));
+                xWingActive_1 = true;
+            }
+            if (elapsedTime > 3 && xWingActive_2 != true)
+            {
+                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, bulletManager, new Microsoft.Xna.Framework.Vector2(0, 200), screenWidth, _gameTime));
+                xWingActive_2 = true;
+            }
+            if (elapsedTime > 4 && xWingActive_3 != true)
+            {
+                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, bulletManager, new Microsoft.Xna.Framework.Vector2(0, 150), screenWidth, _gameTime));
+                xWingActive_3 = true;
+            }
+
+
+            if (elapsedTime > 5 && bossActive_A != true)
+            {
+                entityManager.AddEntity_BossA(new BossA(bossATexture, blasterGreen, bulletManager, new Microsoft.Xna.Framework.Vector2(screenWidth, 25), screenWidth, _gameTime));
+                bossActive_A = true;
+            }
+
+
+            if (elapsedTime > 10 && aWingActive_1 != true)
+            {
+                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, bulletManager, new Microsoft.Xna.Framework.Vector2(screenWidth, 380), screenWidth, _gameTime));
+                aWingActive_1 = true;
+            }
+            if (elapsedTime > 11 && aWingActive_2 != true)
+            {
+                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, bulletManager, new Microsoft.Xna.Framework.Vector2(screenWidth, 340), screenWidth, _gameTime));
+                aWingActive_2 = true;
+            }
+            if (elapsedTime > 12 && aWingActive_3 != true)
+            {
+                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, bulletManager, new Microsoft.Xna.Framework.Vector2(screenWidth, 300), screenWidth, _gameTime));
+                aWingActive_3 = true;
+            }
+
+
+            if (elapsedTime > 20 && bossActive_B != true)
+            {
+                entityManager.AddEntity_BossB(new BossB(rebelScum, blasterGreen, blasterBlue, bulletManager, new Microsoft.Xna.Framework.Vector2(0, 50), screenWidth, _gameTime));
+                bossActive_B = true;
+            }
+
+            elapsedTime += (float)_gameTime.ElapsedGameTime.TotalSeconds;
+
+            entityManager.Update(_gameTime);
+            bulletManager.Update(_gameTime);
+
+            player.Update(_gameTime);
+
+            base.Update(_gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -107,29 +196,26 @@ namespace BulletHell_CPTS587
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
-            //  _pc.Draw(_spriteBatch, gameTime);
-
-            _entityManager.Draw(_spriteBatch, gameTime);
+            
 
 
+            spriteBatch.Begin();
 
-            //------just for displaying, delete when done using ------------//
-            _spriteBatch.Draw(_spriteSheetTexture, new Vector2(10, 10), Color.White);
+            spriteBatch.Draw(backgroundTexture, backgroundPos, Color.White);
+            spriteBatch.Draw(weGotDeathStar, weGotDeathStarPos, Color.White);
+            
 
-            _bullet.Draw(_spriteBatch, gameTime);
-            _ebullet.Draw(_spriteBatch, gameTime);
-            //  _gruntA.Draw(_spriteBatch, gameTime); 
-            //  _gruntB.Draw(_spriteBatch, gameTime); 
-            _mlboss.Draw(_spriteBatch, gameTime);
-            _elboss.Draw(_spriteBatch, gameTime);
-            //------just for displaying, delete when done using ------------//
+            //spriteBatch.Draw(SpaceShip, new Rectangle(0, 0, 100, 100), Color.White);
 
-            _spriteBatch.End();
+            player.Draw(spriteBatch);
+            //enemyA.Draw(spriteBatch);
+
+            entityManager.Draw(spriteBatch);
+            bulletManager.Draw(spriteBatch);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
-
-
     }
 }
