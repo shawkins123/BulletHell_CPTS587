@@ -52,8 +52,6 @@ namespace CPTS587
 
         bool bossActive_B = false;
 
-        private bool isHalfSpeed = false;
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -113,23 +111,6 @@ namespace CPTS587
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (isHalfSpeed)
-            {
-                _gameTime = new GameTime(_gameTime.TotalGameTime, _gameTime.ElapsedGameTime / 2);
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Tab))
-            {
-                if (isHalfSpeed == true)
-                {
-                    isHalfSpeed = false;
-                }
-                else
-                {
-                    isHalfSpeed = true;
-                }
-
-            }
 
             // TODO: Add your update logic here
 

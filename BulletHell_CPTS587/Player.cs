@@ -14,6 +14,11 @@ namespace CPTS587
 
         Vector2 position;
         float speed = 4.0f;
+        bool regularSpeed;
+        private double _timeSinceLastSpeedChange = 0;
+        private double _speedChangeInterval = 0.5;
+
+
         public Texture2D Texture { get; set; }
         public Rectangle Bounds;
 
@@ -22,10 +27,13 @@ namespace CPTS587
         private int screenHeight;
         private int screenWidth;
 
+
+
+
         public Player(Texture2D texture, int inpScreenWidth, int inpScreenHeight)
         {
             Texture = texture;
-
+            regularSpeed = true;
             
             entityWidth = Texture.Width;
             entityHeight = Texture.Height;
@@ -41,6 +49,22 @@ namespace CPTS587
         public void Update(GameTime gameTime)
         {
             KeyboardState keyState = Keyboard.GetState();
+
+            _timeSinceLastSpeedChange += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (keyState.IsKeyDown(Keys.Tab) && _timeSinceLastSpeedChange >= _speedChangeInterval) 
+            {
+                if (regularSpeed == true)
+                {
+                    regularSpeed = false;
+                    speed = 2.0f;
+                }
+                else
+                {
+                    regularSpeed = true;
+                    speed = 4.0f;
+                }
+            }
 
             if (keyState.IsKeyDown(Keys.Up) && position.Y > 0)
             {
@@ -62,22 +86,22 @@ namespace CPTS587
             {
                 if (position.X > 0)
                 {
-                    position.X -= speed * 0.7f;
+                    position.X -= speed * 0.5f;
                 }
                 if (position.Y > 0)
                 {
-                    position.Y -= speed * 0.7f;
+                    position.Y -= speed * 0.5f;
                 }
             }
             if (keyState.IsKeyDown(Keys.Up) && keyState.IsKeyDown(Keys.Right))
             {
                 if (position.X < (screenWidth - entityWidth))
                 {
-                    position.X += speed * 0.7f;
+                    position.X += speed * 0.5f;
                 }
                 if (position.Y > 0)
                 {
-                    position.Y -= speed * 0.7f;
+                    position.Y -= speed * 0.5f;
                 }
             }
             if (keyState.IsKeyDown(Keys.Down) && keyState.IsKeyDown(Keys.Left))
