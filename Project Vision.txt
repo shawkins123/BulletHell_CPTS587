@@ -1,0 +1,71 @@
+Our vision: To give players a sense of empowerment from defeating the Rebel Scum.
+
+The game is set in the Star Wars universe with Vader piloting a crippled Imperial Star Destroyer after a major battle.
+The player must navigate through space, but survival is not the only goal. The player will get more points for defeating
+more enemies. 
+
+PLAYER
+
+An Imperial Star Destroyer that is crippled and only has one battery of turbolasers working. 
+ 	Movement: The player can move in eight directions using the four arrow keys (diagonal movement uses two keys at once).
+ 	Firing: The player can fire their turbolaser by pressing the space key (not implemented per instructions in deliverable 1).
+ 	Slow: The player can cycle between slow and normal movement speeds by pressing the "Tab" key.
+ 	Lives: The player has 10 lives equivalent to 10 shots. Note that for example all hits from one quad-turbo laser will remove 4 life. 
+
+ENEMY TYPES
+
+X-Wing: 	Slower moving fighters that tend to enter from one side of the screen and move side-to-side across the screen. 
+        	X-Wings fire fast green lasers at a rate of 1 per second.
+		Life: 2 hits
+
+A-Wing: 	Faster moving fighters that enter similar to X-Wings but tend to move up and down as well as side-to-side. 
+        	A-Wings fire slow blue lasers at a rate of 1 per half-second. 
+		Life: 1 hit
+
+Frigate: 	The first boss, fires a set of fast green turbolasers that face forward.
+               	Can also fire slow moving blue lasers at a reduced rate on a slight diagonal. 
+		Life: 10 hits
+
+Cruiser:	The final boss, a Mon-Calamari cruiser capble of devastating attacks in two rounds.
+		Round 1: Fires a quad-turbo laser forward facing at a medium rate and medium speed.
+			 Also fires fast blue lasers angled to either side of the ship extending diagonally. 
+			 The boss will have 10 hits of life for round 1. 
+		Round 2: When boss receives half damage, the writing "It's a Trap!" appears next to the ship, signaling phase 2.
+			 The boss is invulnerable for 5 seconds so the player must spend time dodging. 
+			 During all of phase 2, the Cruiser will fire quad turbolasers from three positions. 
+			 Two rear quad-turbo lasers will rotate at a slow rate of speed to fire in all directions.
+			 The front quad-turbo laser will fire straight forward. 
+			 It will also shoot proton torpedoes, which are slow moving and have an explosion radious. 
+			 The boss will have 15 hits of life for round 2.
+
+GAMEPLAY
+The game will last 4 minutes in total, and consist of waves of enemies. 
+
+TimeStamp	Description
+
+0:00-0:10	Nothing, allow player to test controls and fire a few shots. 
+0:10-0:45	X-Wing Wave 1: Three X-Wings enter from the right side and fly left-right across screen. 
+		Any X-Wing that is not dead exit on the left side after being alive for 35 seconds. 
+0:45-1:20	A-Wing Wave 1: Three A-Wings enter from the left side and fly left-right and up-down. 
+		Any A-Wing that is not dead exit on the right side after being alive for 35 seconds. 
+1:00-1:30	X-Wing Wave 2: Three X-Wings enter from the right side and fly left-right across screen. 
+		Any X-Wing that is not dead exit on the left side after being alive for 30 seconds. 
+	
+1:30-2:00	The Frigate boss appears during this time, enterring from the left of the screen and moving side-to-side.
+		If the Frigate is not defeated, it will proceed to the right of the screen and exit. 	
+
+2:00-2:30	X-Wing Wave 3: Five X-Wings enter from the right side and fly left-right across screen. 
+		Any X-Wing that is not dead exit on the left side after being alive for 30 seconds. 
+2:10-2:40	A-Wing Wave 2: Four A-Wings enter from the left side and fly left-right and up-down. 
+		Any A-Wing that is not dead exit on the right side after being alive for 30 seconds. 
+2:30-3:00	X-Wing Wave 4: Five X-Wings enter from the right side and fly left-right across screen. 
+		Any X-Wing that is not dead exit on the left side after being alive for 30 seconds. 
+2:30-3:00	A-Wing Wave 3: Four A-Wings enter from the left side and fly left-right and up-down. 
+		Any A-Wing that is not dead exit on the right side after being alive for 30 seconds.
+
+3:00-4:00	Final Boss. Mon Calamari Cruiser slowly enters down from top center while shooting, begins to move left-right and
+		as well as up-down across the screen. 
+		Final Boss Phase 2 is not time-stamped and instead begins when the boss takes 10 damage.
+4:00		Game ends. 
+
+Note: Any of the above may be adjusted based on playthrough testing and assessed difficulty. 
