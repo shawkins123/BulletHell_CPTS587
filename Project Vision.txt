@@ -1,6 +1,6 @@
 Our vision: To give players a sense of empowerment from defeating the Rebel Scum.
 
-The game is set in the Star Wars universe with Vader piloting a crippleD Imperial Star Destroyer after a major battle.
+The game is set in the Star Wars universe with Vader piloting a crippled Imperial Star Destroyer after a major battle.
 The player must navigate through space, but survival is not the only goal. The player will get more points for defeating
 more enemies. 
 
@@ -10,7 +10,7 @@ An Imperial Star Destroyer that is crippled and only has one battery of turbolas
  	Movement: The player can move in eight directions using the four arrow keys (diagonal movement uses two keys at once).
  	Firing: The player can fire their turbolaser by pressing the space key (not implemented per instructions in deliverable 1).
  	Slow: The player can cycle between slow and normal movement speeds by pressing the "Tab" key.
- 	Lives: The player has 10 lives equivalent to 10 shots. Note that for example a quad-turbo laser will do 4 damage. 
+ 	Lives: The player has 10 lives equivalent to 10 shots. Note that for example all hits from one quad-turbo laser will remove 4 life. 
 
 ENEMY TYPES
 
@@ -52,7 +52,7 @@ TimeStamp	Description
 		Any X-Wing that is not dead exit on the left side after being alive for 30 seconds. 
 	
 1:30-2:00	The Frigate boss appears during this time, enterring from the left of the screen and moving side-to-side.
-		If the Frigate is not defeated, it will proceed tot he right of the screen and exit. 	
+		If the Frigate is not defeated, it will proceed to the right of the screen and exit. 	
 
 2:00-2:30	X-Wing Wave 3: Five X-Wings enter from the right side and fly left-right across screen. 
 		Any X-Wing that is not dead exit on the left side after being alive for 30 seconds. 
