@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using BulletHell_CPTS587;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -34,6 +34,7 @@ namespace CPTS587.Entities
         private float bulletTimer;
         private float bulletInterval = 0.75f; // 1 second
 
+        private Movement _movement;
 
         public BossB(Texture2D texture, Texture2D bulletTextureA, Texture2D bulletTextureB, BulletManager inpBulletManager, Vector2 inpPosition, int inpScreenWidth, GameTime gameTime)
         {
@@ -53,6 +54,8 @@ namespace CPTS587.Entities
             screenWidth = inpScreenWidth;
             spawnTime = gameTime.TotalGameTime.TotalSeconds;
             leaveTime = spawnTime + 20;
+            Movement movement = new Movement();
+            _movement = movement;
         }
 
         public BossB(ContentManager content)
@@ -91,28 +94,8 @@ namespace CPTS587.Entities
                 bulletTimer = 0;
             }
 
-            float newX;
-
-            if (direction == 1)
-            {
-                newX = position.X + speed * elapsedTime;
-            }
-            else
-            {
-                newX = position.X - speed * elapsedTime;
-            }
-
-            if (newX > (screenWidth - entityWidth))
-            {
-                direction = 0;
-            }
-            if (newX < 0)
-            {
-                direction = 1;
-            }
-            
-            position.X = newX;
-
+            _movement.updatePosition(position, elapsedTime, speed);
+            move();
 
             //Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
             Bounds.X = (int)position.X;
@@ -123,6 +106,20 @@ namespace CPTS587.Entities
             {
                 Active = false;
             }
+
+        }
+
+        private void move()
+        {
+            if (direction == 1)
+                position.X = _movement.moveRight(position.X);
+            else
+                position.X = _movement.moveLeft(position.X);
+
+            if (position.X > screenWidth - entityWidth)
+                direction = 2;
+            else if (position.X < entityWidth)
+                direction = 1;
         }
 
         public void Draw(SpriteBatch spriteBatch)
