@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using BulletHell_CPTS587;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,12 +13,13 @@ namespace CPTS587.Entities
     public class EnemyA
     {
         private ContentManager content;
-        Vector2 position;
+        public Vector2 position; //set to private
+        public float elapsedTime; //set to private
         public Texture2D Texture;
         Texture2D BulletTexture;
         public Rectangle Bounds;
         public Vector2 Velocity;
-        float speed = 200.0f;
+        public float speed = 200.0f; //set to private
         int screenWidth;
 
         int entityWidth;
@@ -31,6 +32,8 @@ namespace CPTS587.Entities
         private BulletManager _bulletManager;
         private float bulletTimer;
         private float bulletInterval = 1.0f; // 1 second
+
+        private Movement _movement;
 
 
         public EnemyA(Texture2D texture, Texture2D bulletTexture, BulletManager inpBulletManager, Vector2 inpPosition, int inpScreenWidth, GameTime gameTime)
@@ -49,6 +52,8 @@ namespace CPTS587.Entities
             screenWidth = inpScreenWidth;
             spawnTime = gameTime.TotalGameTime.TotalSeconds;
             leaveTime = spawnTime + 10;
+            Movement movement = new Movement();
+            _movement = movement;
         }
 
         public EnemyA(ContentManager content)
@@ -63,9 +68,10 @@ namespace CPTS587.Entities
 
         public void Update(GameTime gameTime)
         {
-            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             bulletTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
 
             if (bulletTimer >= bulletInterval)
             {
@@ -75,29 +81,9 @@ namespace CPTS587.Entities
                 bulletTimer = 0;
             }
 
-            float newX;
 
-            if (direction == 1)
-            {
-                newX = position.X + speed * elapsedTime;
-            }
-            else
-            {
-                newX = position.X - speed * elapsedTime;
-            }
-
-            if (newX > (screenWidth - entityWidth))
-            {
-                direction = 0;
-            }
-            if (newX < 0)
-            {
-                direction = 1;
-            }
-            
-            position.X = newX;
-
-
+            _movement.updatePosition(position, elapsedTime, speed);
+            move();
 
             Bounds.X = (int)position.X;
             Bounds.Y = (int)position.Y;
@@ -107,6 +93,19 @@ namespace CPTS587.Entities
             {
                 Active = false;
             }
+        }
+
+        private void move()
+        {
+            if (direction == 1)
+                position.X = _movement.moveRight(position.X);
+            else
+                position.X = _movement.moveLeft(position.X);
+
+            if (position.X > screenWidth - entityWidth)
+                direction = 2;
+            else if (position.X < entityWidth)
+                direction = 1;
         }
 
         public void Draw(SpriteBatch spriteBatch)
