@@ -1,4 +1,5 @@
-﻿using CPTS587.Entities;
+﻿using BulletHell_CPTS587.System;
+using CPTS587.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -36,6 +37,8 @@ namespace CPTS587
         private Player player;
         private EnemyA enemyA;
         private EnemyB enemyB;
+
+        private InputController inputController; 
 
         private int screenWidth;
         private int screenHeight;
@@ -86,7 +89,7 @@ namespace CPTS587
 
             entityManager = new EntityManager();
             bulletManager = new BulletManager();
-
+            
             
 
             // load the player
@@ -95,6 +98,7 @@ namespace CPTS587
             ISD = Content.Load<Texture2D>("ISD");
 
             player = new Player(ISD, screenWidth, screenHeight);
+            inputController = new InputController(player, bulletManager);
 
             xWing = Content.Load<Texture2D>("xWing");
             bossATexture = Content.Load<Texture2D>("BossA");
@@ -113,7 +117,7 @@ namespace CPTS587
 
 
             // TODO: Add your update logic here
-
+            inputController.processControls(_gameTime);
 
             if (elapsedTime > 2 && xWingActive_1 != true)
             {
