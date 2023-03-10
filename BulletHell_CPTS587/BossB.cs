@@ -13,7 +13,7 @@ namespace CPTS587.Entities
     public class BossB
     {
         private ContentManager content;
-        Vector2 position;
+        public Vector2 position; //set to private
         public Texture2D Texture;
         Texture2D BulletTextureA;
         Texture2D BulletTextureB;
@@ -30,18 +30,17 @@ namespace CPTS587.Entities
         private double leaveTime;
         public bool Active = true;
 
-        private BulletManager _bulletManager;
-        private float bulletTimer;
-        private float bulletInterval = 0.75f; // 1 second
+        //set below to private
+        public float bulletTimer;
+        public float bulletInterval = 0.75f; // 1 second
 
         private Movement _movement;
 
-        public BossB(Texture2D texture, Texture2D bulletTextureA, Texture2D bulletTextureB, BulletManager inpBulletManager, Vector2 inpPosition, int inpScreenWidth, GameTime gameTime)
+        public BossB(Texture2D texture, Texture2D bulletTextureA, Texture2D bulletTextureB, Vector2 inpPosition, int inpScreenWidth, GameTime gameTime)
         {
             this.Texture = texture;
             this.BulletTextureA = bulletTextureA;
             this.BulletTextureB = bulletTextureB;
-            _bulletManager = inpBulletManager;
 
 
             position = inpPosition;
@@ -54,6 +53,7 @@ namespace CPTS587.Entities
             screenWidth = inpScreenWidth;
             spawnTime = gameTime.TotalGameTime.TotalSeconds;
             leaveTime = spawnTime + 20;
+
             Movement movement = new Movement();
             _movement = movement;
         }
@@ -71,28 +71,7 @@ namespace CPTS587.Entities
         public void Update(GameTime gameTime)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
             bulletTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (bulletTimer >= bulletInterval)
-            {
-
-                Vector2 laserPosition = position;
-
-                laserPosition.X -= 5;
-                _bulletManager.AddEntity_Bullet(new Bullet(BulletTextureA, laserPosition, new Vector2(-5, 10)));
-
-                laserPosition.X += 10;
-                _bulletManager.AddEntity_Bullet(new Bullet(BulletTextureA, laserPosition, new Vector2(5, 10)));
-
-                laserPosition.X -= 5;
-                _bulletManager.AddEntity_Bullet(new Bullet(BulletTextureB, laserPosition, new Vector2(0, 3)));
-
-                laserPosition.X += 10;
-                _bulletManager.AddEntity_Bullet(new Bullet(BulletTextureB, laserPosition, new Vector2(0, 3)));
-
-                bulletTimer = 0;
-            }
 
             _movement.updatePosition(position, elapsedTime, speed);
             move();

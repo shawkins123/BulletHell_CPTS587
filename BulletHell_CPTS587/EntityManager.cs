@@ -16,13 +16,23 @@ namespace CPTS587.Entities
         private List<BossB> BossB;
         private List<Bullet> Bullets;
 
-        public EntityManager()
+        private BulletManager _bulletManager;
+
+        Texture2D BlasterGreen;
+        Texture2D BlasterBlue;
+
+        public EntityManager(Texture2D green, Texture2D blue, BulletManager bulletManager)
         {
             entitiesA = new List<EnemyA>();
             BossA = new List<BossA>();
             entitiesB = new List<EnemyB>();
             BossB = new List<BossB>();
             Bullets = new List<Bullet>();
+
+            _bulletManager = bulletManager;
+            
+            BlasterGreen = green;
+            BlasterBlue = blue;
         }
 
         public void AddEntity_EnemyA(EnemyA entity)
@@ -51,44 +61,19 @@ namespace CPTS587.Entities
 
         public void Update(GameTime gameTime)
         {
+            manageXwings(gameTime);
 
-            for (int i = 0; i < entitiesA.Count; i++)
-            {
-                if (!entitiesA[i].Active)
-                {
-                    entitiesA.RemoveAt(i);
-                    i--;
-                }
-            }
+            manageBossA(gameTime);
 
-            for (int i = 0; i < BossA.Count; i++)
-            {
-                if (!BossA[i].Active)
-                {
-                    BossA.RemoveAt(i);
-                    i--;
-                }
-            }
+            manageAWings(gameTime);
 
-            for (int i = 0; i < entitiesB.Count; i++)
-            {
-                if (!entitiesB[i].Active)
-                {
-                    entitiesB.RemoveAt(i);
-                    i--;
-                }
-            }
+            manageBossB(gameTime);
 
-            for (int i = 0; i < BossB.Count; i++)
-            {
-                if (!BossB[i].Active)
-                {
-                    BossB.RemoveAt(i);
-                    i--;
-                }
-            }
+            updateEntities(gameTime);
+        }
 
-
+        private void updateEntities(GameTime gameTime)
+        {
             foreach (EnemyA entity in entitiesA)
             {
                 if (entity.Active == true)
@@ -126,6 +111,117 @@ namespace CPTS587.Entities
                 if (entity.Active == true)
                 {
                     entity.Update(gameTime);
+                }
+            }
+        }
+
+        private void manageBossB(GameTime gameTime)
+        {
+            for (int i = 0; i < BossB.Count; i++)
+            {
+                foreach (BossB entity in BossB)
+                {
+                    if (entity.bulletTimer >= entity.bulletInterval)
+                    {
+                        entity.bulletTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                        Vector2 laserPosition = entity.position;
+
+                        laserPosition.X -= 5;
+                        _bulletManager.AddEntity_Bullet(new Bullet(BlasterGreen, laserPosition, new Vector2(-5, 10)));
+
+                        laserPosition.X += 10;
+                        _bulletManager.AddEntity_Bullet(new Bullet(BlasterGreen, laserPosition, new Vector2(5, 10)));
+
+                        laserPosition.X -= 5;
+                        _bulletManager.AddEntity_Bullet(new Bullet(BlasterBlue, laserPosition, new Vector2(0, 3)));
+
+                        laserPosition.X += 10;
+                        _bulletManager.AddEntity_Bullet(new Bullet(BlasterBlue, laserPosition, new Vector2(0, 3)));
+
+                        entity.bulletTimer = 0;
+                    }
+                }
+
+                if (!BossB[i].Active)
+                {
+                    BossB.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        private void manageAWings(GameTime gameTime)
+        {
+            for (int i = 0; i < entitiesB.Count; i++)
+            {
+                foreach (EnemyB entity in entitiesB)
+                {
+                    if (entity.bulletTimer >= entity.bulletInterval)
+                    {
+                        entity.bulletTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        _bulletManager.AddEntity_Bullet(new Bullet(BlasterBlue, entity.position, new Vector2(0, 2)));
+                        entity.bulletTimer = 0;
+                    }
+                }
+
+                if (!entitiesB[i].Active)
+                {
+                    entitiesB.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        private void manageBossA(GameTime gameTime)
+        {
+            for (int i = 0; i < BossA.Count; i++)
+            {
+
+                foreach (BossA entity in BossA)
+                {
+                    if (entity.bulletTimer >= entity.bulletInterval)
+                    {
+                        entity.bulletTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                        Vector2 laserPosition = entity.position;
+
+                        laserPosition.X -= 5;
+                        _bulletManager.AddEntity_Bullet(new Bullet(BlasterGreen, laserPosition, new Vector2(0, 5)));
+
+                        laserPosition.X += 10;
+                        _bulletManager.AddEntity_Bullet(new Bullet(BlasterGreen, laserPosition, new Vector2(0, 5)));
+
+                        entity.bulletTimer = 0;
+                    }
+                }
+
+                if (!BossA[i].Active)
+                {
+                    BossA.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        private void manageXwings(GameTime gameTime)
+        {
+            for (int i = 0; i < entitiesA.Count; i++)
+            {
+                foreach (EnemyA entity in entitiesA)
+                {
+                    if (entity.bulletTimer >= entity.bulletInterval)
+                    {
+                        entity.bulletTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        _bulletManager.AddEntity_Bullet(new Bullet(BlasterGreen, entity.position, new Vector2(0, 5)));
+                        entity.bulletTimer = 0;
+                    }
+                }
+
+                if (!entitiesA[i].Active)
+                {
+                    entitiesA.RemoveAt(i);
+                    i--;
                 }
             }
         }

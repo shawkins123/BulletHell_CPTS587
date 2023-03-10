@@ -13,7 +13,7 @@ namespace CPTS587.Entities
     public class BossA
     {
         private ContentManager content;
-        Vector2 position;
+        public Vector2 position; //set to private
         public Texture2D Texture;
         Texture2D BulletTexture;
         public Rectangle Bounds;
@@ -29,17 +29,16 @@ namespace CPTS587.Entities
         private double leaveTime;
         public bool Active = true;
 
-        private BulletManager _bulletManager;
-        private float bulletTimer;
-        private float bulletInterval = 1.0f; // 1 second
+        //set below to private
+        public float bulletTimer;
+        public float bulletInterval = 1.0f; // 1 second
 
         private Movement _movement;
 
-        public BossA(Texture2D texture, Texture2D bulletTexture, BulletManager inpBulletManager, Vector2 inpPosition, int inpScreenWidth, GameTime gameTime)
+        public BossA(Texture2D texture, Texture2D bulletTexture, Vector2 inpPosition, int inpScreenWidth, GameTime gameTime)
         {
             this.Texture = texture;
             this.BulletTexture = bulletTexture;
-            _bulletManager = inpBulletManager;
 
 
             position = inpPosition;
@@ -52,6 +51,7 @@ namespace CPTS587.Entities
             screenWidth = inpScreenWidth;
             spawnTime = gameTime.TotalGameTime.TotalSeconds;
             leaveTime = spawnTime + 10;
+
             Movement movement = new Movement();
             _movement = movement;
         }
@@ -69,22 +69,7 @@ namespace CPTS587.Entities
         public void Update(GameTime gameTime)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
             bulletTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (bulletTimer >= bulletInterval)
-            {
-
-                Vector2 laserPosition = position;
-
-                laserPosition.X -= 5;
-                _bulletManager.AddEntity_Bullet(new Bullet(BulletTexture, laserPosition, new Vector2(0, 5)));
-
-                laserPosition.X += 10;
-                _bulletManager.AddEntity_Bullet(new Bullet(BulletTexture, laserPosition, new Vector2(0, 5)));
-
-                bulletTimer = 0;
-            }
 
             _movement.updatePosition(position, elapsedTime, speed);
             move();
