@@ -15,7 +15,6 @@ namespace CPTS587.Entities
 
         public BulletManager()
         {
-
             Bullets = new List<Bullet>();
         }
 
