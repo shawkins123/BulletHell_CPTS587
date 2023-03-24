@@ -1,4 +1,5 @@
-﻿using BulletHell_CPTS587.System;
+﻿using BulletHell_CPTS587;
+using BulletHell_CPTS587.System;
 using CPTS587.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -55,6 +56,8 @@ namespace CPTS587
 
         bool bossActive_B = false;
 
+        private HealthBar healthbar;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -90,17 +93,18 @@ namespace CPTS587
             blasterGreen = Content.Load<Texture2D>("blasterGreen");
             blasterBlue = Content.Load<Texture2D>("blasterBlue");
 
-            bulletManager = new BulletManager();
-            entityManager = new EntityManager(blasterGreen, blasterBlue, bulletManager); //MODIFIED
-
-
             // load the player
             screenWidth = GraphicsDevice.Viewport.Bounds.Width;
             screenHeight = GraphicsDevice.Viewport.Bounds.Height;
             ISD = Content.Load<Texture2D>("ISD");
 
-            player = new Player(ISD, screenWidth, screenHeight);
+           
+            player = new Player(ISD, screenWidth, screenHeight, healthbar);
+            healthbar = new HealthBar(player, GraphicsDevice);
+            bulletManager = new BulletManager(player);
             inputController = new InputController(player, bulletManager);
+            entityManager = new EntityManager(blasterGreen, blasterBlue, bulletManager); //MODIFIED
+
 
             xWing = Content.Load<Texture2D>("xWing");
             bossATexture = Content.Load<Texture2D>("BossA");
@@ -108,7 +112,7 @@ namespace CPTS587
             rebelScum = Content.Load<Texture2D>("BossB");
 
             
-            
+
         }
 
         protected override void Update(GameTime _gameTime)
@@ -184,21 +188,23 @@ namespace CPTS587
 
             // TODO: Add your drawing code here
             
-
-
             spriteBatch.Begin();
 
             spriteBatch.Draw(backgroundTexture, backgroundPos, Color.White);
             spriteBatch.Draw(weGotDeathStar, weGotDeathStarPos, Color.White);
-            
+
 
             //spriteBatch.Draw(SpaceShip, new Rectangle(0, 0, 100, 100), Color.White);
-
+            
             player.Draw(spriteBatch);
+            healthbar.Draw(spriteBatch);
             //enemyA.Draw(spriteBatch);
 
             entityManager.Draw(spriteBatch);
             bulletManager.Draw(spriteBatch);
+
+            
+
 
             spriteBatch.End();
 

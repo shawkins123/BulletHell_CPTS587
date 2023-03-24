@@ -12,10 +12,12 @@ namespace CPTS587.Entities
     {
 
         private List<Bullet> Bullets;
+        private Player player;
 
-        public BulletManager()
+        public BulletManager(Player player)
         {
             Bullets = new List<Bullet>();
+            this.player = player;   
         }
 
         public void AddEntity_Bullet(Bullet entity)
@@ -31,6 +33,14 @@ namespace CPTS587.Entities
                 if (entity.Active == true)
                 {
                     entity.Update(gameTime);
+                    //find out if upper boundary of bullet touches upper boundary of player
+                    if(entity.Bounds.X >= player.Bounds.X &&
+                       entity.Bounds.X <= player.Bounds.X + player.entityWidth)
+                    {
+                        if (entity.Bounds.Y >= player.Bounds.Y &&
+                            entity.Bounds.Y <= player.Bounds.Y + player.entityHeight)
+                            player.IsHit(gameTime);
+                    }
                 }
             }
         }
