@@ -19,6 +19,8 @@ namespace BulletHell_CPTS587.System
         private BulletManager _bulletManager;
 
         private bool hasFireButtonBeenPressed;
+        //cheatmode
+        private bool hasCheatButtonBeenPressed;
 
         private double _timeSinceLastSpeedChange = 0;
         private double _speedChangeInterval = 0.5;
@@ -59,9 +61,32 @@ namespace BulletHell_CPTS587.System
                 hasFireButtonBeenPressed = false;
             }
 
+            //cheatmode
+            if (keyState.IsKeyDown(Keys.W) && hasCheatButtonBeenPressed == false)
+            {
+                activateCheatMode();
+                hasCheatButtonBeenPressed = true;
+            }
+
+            if (keyState.IsKeyUp(Keys.W))
+            {
+                deactivateCheatMode();
+                hasCheatButtonBeenPressed = false;
+            }
+
+
         }
 
-       
+        public void activateCheatMode()
+        {
+            _pc.isCheating = true;
+        }
+
+        public void deactivateCheatMode()
+        {
+            _pc.isCheating = false;
+        }
+
         public void fireBullet(GameTime gameTime)
         {
             //  _bulletManager.fire(_pc.position.Y, _pc.position.X);

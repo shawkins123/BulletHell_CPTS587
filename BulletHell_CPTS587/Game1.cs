@@ -100,7 +100,8 @@ namespace CPTS587
 
            
             player = new Player(ISD, screenWidth, screenHeight, healthbar);
-            healthbar = new HealthBar(player, GraphicsDevice);
+            healthbar = new HealthBar(player, GraphicsDevice, screenHeight, screenWidth);
+
             bulletManager = new BulletManager(player);
             inputController = new InputController(player, bulletManager);
             entityManager = new EntityManager(blasterGreen, blasterBlue, bulletManager); //MODIFIED
@@ -122,8 +123,11 @@ namespace CPTS587
                 Exit();
 
 
+
+
             // TODO: Add your update logic here
             inputController.processControls(_gameTime);
+           
 
             if (elapsedTime > 2 && xWingActive_1 != true)
             {
@@ -178,6 +182,7 @@ namespace CPTS587
             bulletManager.Update(_gameTime);
 
             player.Update(_gameTime);
+            healthbar.updateHealthBar();
 
             base.Update(_gameTime);
         }
