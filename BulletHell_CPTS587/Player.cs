@@ -25,10 +25,11 @@ namespace CPTS587
         private bool isAlive;
         private int lives;
         private bool isInvincible;
+        public int Lives { get; set;}
 
         private float endTime;
 
-        public bool isCheating; //cheat mode
+     //   private HealthBar healthBar;
 
         public Player(Texture2D texture, int inpScreenWidth, int inpScreenHeight, HealthBar healthBarInput)
         {
@@ -41,11 +42,13 @@ namespace CPTS587
             lives = 4;
             isAlive = true;
             setPosition();
+      //      healthBar = healthBarInput;
             Bounds = new Rectangle((int)position.X, (int)position.Y, Texture.Width, Texture.Height);
         }
 
         private void setPosition()
         {
+     //       healthBar.setupHealthBar();
             position = new Vector2(screenWidth / 2 - entityWidth / 2, screenHeight - entityHeight);          
         }
 
@@ -74,26 +77,18 @@ namespace CPTS587
             spriteBatch.Draw(Texture, position, Color.White);
         }
 
-        public int getLives()
+        public void IsHit(GameTime gameTime)
         {
-            return lives;
-        }
-
-        public void IsHit(GameTime gameTime) //activate cheat mode here
-        {
-            if(isCheating == false) 
+            if(isInvincible == false)
             { 
-                if(isInvincible == false)
-                { 
-                    lives -= 1;
+                lives -= 1;
 
-                    if (lives == 0)
-                        Die();
+                if (lives == 0)
+                    Die();
 
-                 //   isInvincible = true;
-                    endTime = (float)gameTime.ElapsedGameTime.TotalSeconds + 10;
-                    setPosition();
-                }
+                isInvincible = true;
+                endTime = (float)gameTime.ElapsedGameTime.TotalSeconds + 10;
+                setPosition();
             }
         }
 

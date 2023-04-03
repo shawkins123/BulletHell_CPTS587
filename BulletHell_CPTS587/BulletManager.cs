@@ -11,7 +11,7 @@ namespace CPTS587.Entities
     public class BulletManager
     {
 
-        private List<Bullet> Bullets;
+        public List<Bullet> Bullets;
         private Player player;
 
         public BulletManager(Player player)
@@ -28,19 +28,27 @@ namespace CPTS587.Entities
         public void Update(GameTime gameTime)
         {
 
-            foreach (Bullet entity in Bullets)
+            for (int i = Bullets.Count - 1; i >= 0; i--)
             {
-                if (entity.Active == true)
+                if (Bullets[i].Active == true)
                 {
-                    entity.Update(gameTime);
+                    Bullets[i].Update(gameTime);
+
                     //find out if upper boundary of bullet touches upper boundary of player
-                    if(entity.Bounds.X >= player.Bounds.X &&
-                       entity.Bounds.X <= player.Bounds.X + player.entityWidth)
+                    if (Bullets[i].isPlayerBullet == false)
                     {
-                        if (entity.Bounds.Y >= player.Bounds.Y &&
-                            entity.Bounds.Y <= player.Bounds.Y + player.entityHeight)
-                            player.IsHit(gameTime);
+                        if (Bullets[i].Bounds.X >= player.Bounds.X &&
+                        Bullets[i].Bounds.X <= player.Bounds.X + player.entityWidth)
+                        {
+                            if (Bullets[i].Bounds.Y >= player.Bounds.Y &&
+                                Bullets[i].Bounds.Y <= player.Bounds.Y + player.entityHeight)
+                                player.IsHit(gameTime);
+                        }
                     }
+                }
+                else
+                {
+                    Bullets.RemoveAt(i);
                 }
             }
         }

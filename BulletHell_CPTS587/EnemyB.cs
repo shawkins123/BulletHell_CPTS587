@@ -21,13 +21,14 @@ namespace CPTS587.Entities
         float speed = 300.0f;
         int screenWidth;
 
-        int entityWidth;
-        int entityHeight;
+        public int entityWidth;
+        public int entityHeight;
         int direction; // 1 is right, 0 is left
 
         private double spawnTime;
         private double leaveTime;
         public bool Active = true;
+        private bool hitOnce = false;
 
 
         //set below to private
@@ -60,6 +61,19 @@ namespace CPTS587.Entities
         public EnemyB(ContentManager content)
         {
             LoadContent(content);
+        }
+
+        public void isHit()
+        {
+            if (hitOnce == false)
+            {
+                hitOnce = true;
+            }
+            else
+            {
+                Active = false;
+            }
+            
         }
 
         public void LoadContent(ContentManager content)
