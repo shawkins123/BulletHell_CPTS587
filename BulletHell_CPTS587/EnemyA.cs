@@ -12,7 +12,6 @@ namespace CPTS587.Entities
 {
     public class EnemyA
     {
-        private ContentManager content;
         public Vector2 position; //set to private
         public float elapsedTime; //set to private
         public Texture2D Texture;
@@ -22,8 +21,8 @@ namespace CPTS587.Entities
         public float speed = 200.0f; //set to private
         int screenWidth;
 
-        int entityWidth;
-        int entityHeight;
+        public int entityWidth;
+        public int entityHeight;
         int direction; // 1 is right, 2 is left
         private double spawnTime;
         private double leaveTime;
@@ -56,14 +55,9 @@ namespace CPTS587.Entities
             _movement = movement;
         }
 
-        public EnemyA(ContentManager content)
+        public void isHit()
         {
-            LoadContent(content);
-        }
-
-        public void LoadContent(ContentManager content)
-        {
-            //this.texture = content.Load<Texture2D>("TextureName");
+            Active = false;
         }
 
         public void Update(GameTime gameTime)

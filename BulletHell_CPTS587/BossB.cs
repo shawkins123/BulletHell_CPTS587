@@ -22,8 +22,10 @@ namespace CPTS587.Entities
         float speed = 150.0f;
         int screenWidth;
 
-        int entityWidth;
-        int entityHeight;
+        int health = 10;
+
+        public int entityWidth;
+        public int entityHeight;
         int direction; // 1 is right, 2 is left
 
         private double spawnTime;
@@ -66,6 +68,16 @@ namespace CPTS587.Entities
         public void LoadContent(ContentManager content)
         {
             //this.texture = content.Load<Texture2D>("TextureName");
+        }
+
+        public void isHit()
+        {
+            health -= 1;
+            if (health <= 0)
+            {
+                Active = false;
+            }
+
         }
 
         public void Update(GameTime gameTime)

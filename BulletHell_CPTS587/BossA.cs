@@ -21,8 +21,10 @@ namespace CPTS587.Entities
         float speed = 150.0f;
         int screenWidth;
 
-        int entityWidth;
-        int entityHeight;
+        int health = 5;
+
+        public int entityWidth;
+        public int entityHeight;
         int direction; // 1 is right, 2 is left
 
         private double spawnTime;
@@ -59,6 +61,16 @@ namespace CPTS587.Entities
         public BossA(ContentManager content)
         {
             LoadContent(content);
+        }
+
+        public void isHit()
+        {
+            health -= 1;
+            if (health <= 0)
+            {
+                Active = false;
+            }
+            
         }
 
         public void LoadContent(ContentManager content)

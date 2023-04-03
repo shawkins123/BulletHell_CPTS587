@@ -6,8 +6,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.IO;
 using System.Numerics;
-
+using System.Runtime.Serialization;
+using System.IO;
+using System.Text;
 
 namespace CPTS587
 {
@@ -36,8 +39,6 @@ namespace CPTS587
         float elapsedTime = 0;
 
         private Player player;
-        private EnemyA enemyA;
-        private EnemyB enemyB;
 
         private InputController inputController; 
 
@@ -60,6 +61,7 @@ namespace CPTS587
 
         public Game1()
         {
+
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -80,6 +82,7 @@ namespace CPTS587
 
         protected override void LoadContent()
         {
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             content = new ContentManager(Services, "Content");
@@ -92,6 +95,7 @@ namespace CPTS587
 
             blasterGreen = Content.Load<Texture2D>("blasterGreen");
             blasterBlue = Content.Load<Texture2D>("blasterBlue");
+            
 
             // load the player
             screenWidth = GraphicsDevice.Viewport.Bounds.Width;
@@ -100,20 +104,16 @@ namespace CPTS587
 
            
             player = new Player(ISD, screenWidth, screenHeight, healthbar);
-            healthbar = new HealthBar(player, GraphicsDevice, screenHeight, screenWidth);
-
+            healthbar = new HealthBar(player, GraphicsDevice);
             bulletManager = new BulletManager(player);
-            inputController = new InputController(player, bulletManager);
-            entityManager = new EntityManager(blasterGreen, blasterBlue, bulletManager); //MODIFIED
+            inputController = new InputController(player, bulletManager, blasterGreen);
+            entityManager = new EntityManager(bulletManager); //MODIFIED
 
 
             xWing = Content.Load<Texture2D>("xWing");
             bossATexture = Content.Load<Texture2D>("BossA");
             aWing = Content.Load<Texture2D>("AWing");
             rebelScum = Content.Load<Texture2D>("BossB");
-
-            
-
         }
 
         protected override void Update(GameTime _gameTime)
@@ -123,56 +123,98 @@ namespace CPTS587
                 Exit();
 
 
-
-
             // TODO: Add your update logic here
             inputController.processControls(_gameTime);
-           
 
             if (elapsedTime > 2 && xWingActive_1 != true)
             {
-                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, new Microsoft.Xna.Framework.Vector2(0, 250), screenWidth, _gameTime));
+                Ship myShip = ShipFactory.createShip(25, "T-65B X-wing", xWing, new Microsoft.Xna.Framework.Vector2(0, 350), screenWidth, _gameTime, 0.75f);
+                ShipFactory.AddLaser(myShip, 25, "KX9 Laser Cannon", blasterGreen, 1, new Microsoft.Xna.Framework.Vector2(-5, 0), new Microsoft.Xna.Framework.Vector2(0, 5));
+                ShipFactory.AddLaser(myShip, 25, "KX9 Laser Cannon", blasterGreen, 1, new Microsoft.Xna.Framework.Vector2(5, 0), new Microsoft.Xna.Framework.Vector2(0, 5));
+                entityManager.AddShip(myShip);
+
                 xWingActive_1 = true;
             }
+
             if (elapsedTime > 3 && xWingActive_2 != true)
             {
-                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, new Microsoft.Xna.Framework.Vector2(0, 200), screenWidth, _gameTime));
+                Ship myShip = ShipFactory.createShip(25, "T-65B X-wing", xWing, new Microsoft.Xna.Framework.Vector2(0, 300), screenWidth, _gameTime, 0.75f);
+                ShipFactory.AddLaser(myShip, 25, "KX9 Laser Cannon", blasterGreen, 1, new Microsoft.Xna.Framework.Vector2(-5, 0), new Microsoft.Xna.Framework.Vector2(0, 5));
+                ShipFactory.AddLaser(myShip, 25, "KX9 Laser Cannon", blasterGreen, 1, new Microsoft.Xna.Framework.Vector2(5, 0), new Microsoft.Xna.Framework.Vector2(0, 5));
+                entityManager.AddShip(myShip);
+
                 xWingActive_2 = true;
             }
+
             if (elapsedTime > 4 && xWingActive_3 != true)
             {
-                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, new Microsoft.Xna.Framework.Vector2(0, 150), screenWidth, _gameTime));
+                Ship myShip = ShipFactory.createShip(25, "T-65B X-wing", xWing, new Microsoft.Xna.Framework.Vector2(0, 250), screenWidth, _gameTime, 0.75f);
+                ShipFactory.AddLaser(myShip, 25, "KX9 Laser Cannon", blasterGreen, 1, new Microsoft.Xna.Framework.Vector2(-5, 0), new Microsoft.Xna.Framework.Vector2(0, 5));
+                ShipFactory.AddLaser(myShip, 25, "KX9 Laser Cannon", blasterGreen, 1, new Microsoft.Xna.Framework.Vector2(5, 0), new Microsoft.Xna.Framework.Vector2(0, 5));
+                entityManager.AddShip(myShip);
+
                 xWingActive_3 = true;
             }
 
 
             if (elapsedTime > 5 && bossActive_A != true)
             {
-                entityManager.AddEntity_BossA(new BossA(bossATexture, blasterGreen, new Microsoft.Xna.Framework.Vector2(screenWidth, 25), screenWidth, _gameTime));
+                Ship myShip = ShipFactory.createShip(25, "Frigate", bossATexture, new Microsoft.Xna.Framework.Vector2(0, 25), screenWidth, _gameTime);
+                ShipFactory.AddLaser(myShip, 25, "KX9 Laser Cannon", blasterGreen, 1, new Microsoft.Xna.Framework.Vector2(-5, 0), new Microsoft.Xna.Framework.Vector2(0, 5));
+                ShipFactory.AddLaser(myShip, 25, "KX9 Laser Cannon", blasterGreen, 1, new Microsoft.Xna.Framework.Vector2(5, 0), new Microsoft.Xna.Framework.Vector2(0, 5));
+                ShipFactory.AddLaser(myShip, 25, "KX9 Laser Cannon", blasterBlue, 0.5f, new Microsoft.Xna.Framework.Vector2(5, 0), new Microsoft.Xna.Framework.Vector2(-5, 5));
+                ShipFactory.AddLaser(myShip, 25, "KX9 Laser Cannon", blasterBlue, 0.5f, new Microsoft.Xna.Framework.Vector2(5, 0), new Microsoft.Xna.Framework.Vector2(5, 5));
+                entityManager.AddShip(myShip);
+
                 bossActive_A = true;
             }
 
 
             if (elapsedTime > 10 && aWingActive_1 != true)
             {
-                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, new Microsoft.Xna.Framework.Vector2(screenWidth, 380), screenWidth, _gameTime));
+                Ship myShip = ShipFactory.createShip(25, "RZ-1 A-wing", aWing, new Microsoft.Xna.Framework.Vector2(0, 480), screenWidth, _gameTime, 0.25f);
+                ShipFactory.AddLaser(myShip, 10, "KX9 Laser Cannon", blasterBlue, 0.5f, new Microsoft.Xna.Framework.Vector2(-3, 0), new Microsoft.Xna.Framework.Vector2(0, 2));
+                ShipFactory.AddLaser(myShip, 10, "KX9 Laser Cannon", blasterBlue, 0.5f, new Microsoft.Xna.Framework.Vector2(3, 0), new Microsoft.Xna.Framework.Vector2(0, 2));
+                entityManager.AddShip(myShip);
+
                 aWingActive_1 = true;
             }
             if (elapsedTime > 11 && aWingActive_2 != true)
             {
-                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, new Microsoft.Xna.Framework.Vector2(screenWidth, 340), screenWidth, _gameTime));
+                Ship myShip = ShipFactory.createShip(25, "RZ-1 A-wing", aWing, new Microsoft.Xna.Framework.Vector2(0, 440), screenWidth, _gameTime, 0.35f);
+                ShipFactory.AddLaser(myShip, 10, "KX9 Laser Cannon", blasterBlue, 0.5f, new Microsoft.Xna.Framework.Vector2(-3, 0), new Microsoft.Xna.Framework.Vector2(0, 2));
+                ShipFactory.AddLaser(myShip, 10, "KX9 Laser Cannon", blasterBlue, 0.5f, new Microsoft.Xna.Framework.Vector2(3, 0), new Microsoft.Xna.Framework.Vector2(0, 2));
+                entityManager.AddShip(myShip);
                 aWingActive_2 = true;
             }
             if (elapsedTime > 12 && aWingActive_3 != true)
             {
-                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, new Microsoft.Xna.Framework.Vector2(screenWidth, 300), screenWidth, _gameTime));
+                Ship myShip = ShipFactory.createShip(25, "RZ-1 A-wing", aWing, new Microsoft.Xna.Framework.Vector2(0, 400), screenWidth, _gameTime, 0.45f);
+                ShipFactory.AddLaser(myShip, 10, "Borstel RG-9 Laser cannon", blasterBlue, 0.5f, new Microsoft.Xna.Framework.Vector2(-3, 0), new Microsoft.Xna.Framework.Vector2(0, 2));
+                ShipFactory.AddLaser(myShip, 10, "Borstel RG-9 Laser cannon", blasterBlue, 0.5f, new Microsoft.Xna.Framework.Vector2(3, 0), new Microsoft.Xna.Framework.Vector2(0, 2));
+                entityManager.AddShip(myShip);
                 aWingActive_3 = true;
             }
 
 
             if (elapsedTime > 20 && bossActive_B != true)
             {
-                entityManager.AddEntity_BossB(new BossB(rebelScum, blasterGreen, blasterBlue, new Microsoft.Xna.Framework.Vector2(0, 50), screenWidth, _gameTime));
+                Ship myShip = ShipFactory.createShip(25, "MC80-A Star Cruiser", rebelScum, new Microsoft.Xna.Framework.Vector2(0, 50), screenWidth, _gameTime);
+                
+                ShipFactory.AddLaser(myShip, 50, "KX9 Laser Cannon", blasterGreen, 1.0f, new Microsoft.Xna.Framework.Vector2(0, 75), new Microsoft.Xna.Framework.Vector2(6.0f, 4.0f), false, 0.25f);
+                ShipFactory.AddLaser(myShip, 50, "KX9 Laser Cannon", blasterGreen, 1.0f, new Microsoft.Xna.Framework.Vector2(50, 75), new Microsoft.Xna.Framework.Vector2(4.0f, 4.75f), false, 0.5f);
+                ShipFactory.AddLaser(myShip, 50, "KX9 Laser Cannon", blasterGreen, 1.0f, new Microsoft.Xna.Framework.Vector2(-5, 150), new Microsoft.Xna.Framework.Vector2(2.0f, 5.25f), false, 0.75f);
+                ShipFactory.AddLaser(myShip, 50, "KX9 Laser Cannon", blasterGreen, 1f, new Microsoft.Xna.Framework.Vector2(25, 100), new Microsoft.Xna.Framework.Vector2(0.0f, 6.0f), false, 1.0f);
+
+                ShipFactory.AddLaser(myShip, 100, "KX9 Laser Cannon", blasterBlue, 0.75f, new Microsoft.Xna.Framework.Vector2(10, 230), new Microsoft.Xna.Framework.Vector2(0, 2));
+                ShipFactory.AddLaser(myShip, 100, "KX9 Laser Cannon", blasterBlue, 0.75f, new Microsoft.Xna.Framework.Vector2(20, 230), new Microsoft.Xna.Framework.Vector2(0, 2));
+
+
+
+
+                entityManager.AddShip(myShip);
+
+
                 bossActive_B = true;
             }
 
@@ -182,7 +224,6 @@ namespace CPTS587
             bulletManager.Update(_gameTime);
 
             player.Update(_gameTime);
-            healthbar.updateHealthBar();
 
             base.Update(_gameTime);
         }

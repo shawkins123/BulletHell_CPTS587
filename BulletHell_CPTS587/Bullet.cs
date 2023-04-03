@@ -27,13 +27,15 @@ namespace CPTS587.Entities
         private double spawnTime;
         private double leaveTime;
         public bool Active = true;
+        public bool isPlayerBullet;
 
 
-        public Bullet(Texture2D texture, Vector2 inpPosition, Vector2 inpVelocity)
+        public Bullet(Texture2D texture, Vector2 inpPosition, Vector2 inpVelocity, bool bulletType)
         {
             this.Texture = texture;
             position = inpPosition;
             Bounds = new Rectangle((int)position.X, (int)position.Y, Texture.Width, Texture.Height);
+            isPlayerBullet = bulletType;
 
             entityWidth = Texture.Width;
             entityHeight = Texture.Height;
