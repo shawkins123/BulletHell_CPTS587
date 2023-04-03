@@ -1,10 +1,14 @@
-﻿using CPTS587.Entities;
+﻿using BulletHell_CPTS587;
+using BulletHell_CPTS587.System;
+using CPTS587.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 using System.Numerics;
+using System.Xml.Linq;
 
 
 namespace CPTS587
@@ -37,6 +41,8 @@ namespace CPTS587
         private EnemyA enemyA;
         private EnemyB enemyB;
 
+        private InputController inputController; 
+
         private int screenWidth;
         private int screenHeight;
 
@@ -51,6 +57,12 @@ namespace CPTS587
         bool aWingActive_3 = false;
 
         bool bossActive_B = false;
+
+        private HealthBar healthbar;
+
+
+        public GameOver gameOver;
+        private SpriteFont Arial;
 
         public Game1()
         {
@@ -84,25 +96,28 @@ namespace CPTS587
             weGotDeathStar = Content.Load<Texture2D>("weGotDeathStar");
             weGotDeathStarPos = new Microsoft.Xna.Framework.Vector2(1220, 660);
 
-            entityManager = new EntityManager();
-            bulletManager = new BulletManager();
-
-            
+            blasterGreen = Content.Load<Texture2D>("blasterGreen");
+            blasterBlue = Content.Load<Texture2D>("blasterBlue");
 
             // load the player
             screenWidth = GraphicsDevice.Viewport.Bounds.Width;
             screenHeight = GraphicsDevice.Viewport.Bounds.Height;
             ISD = Content.Load<Texture2D>("ISD");
 
-            player = new Player(ISD, screenWidth, screenHeight);
+            Arial = content.Load<SpriteFont>("Arial");
+            gameOver = new GameOver(screenHeight, screenWidth, Arial, spriteBatch, GraphicsDevice);
+
+            player = new Player(ISD, screenWidth, screenHeight, healthbar, gameOver);
+            healthbar = new HealthBar(player, GraphicsDevice);
+            bulletManager = new BulletManager(player);
+            inputController = new InputController(player, bulletManager);
+            entityManager = new EntityManager(blasterGreen, blasterBlue, bulletManager); //MODIFIED
 
             xWing = Content.Load<Texture2D>("xWing");
             bossATexture = Content.Load<Texture2D>("BossA");
             aWing = Content.Load<Texture2D>("AWing");
             rebelScum = Content.Load<Texture2D>("BossB");
 
-            blasterGreen = Content.Load<Texture2D>("blasterGreen");
-            blasterBlue = Content.Load<Texture2D>("blasterBlue");
         }
 
         protected override void Update(GameTime _gameTime)
@@ -113,52 +128,53 @@ namespace CPTS587
 
 
             // TODO: Add your update logic here
+            inputController.processControls(_gameTime);
 
 
             if (elapsedTime > 2 && xWingActive_1 != true)
             {
-                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, bulletManager, new Microsoft.Xna.Framework.Vector2(0, 250), screenWidth, _gameTime));
+                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, new Microsoft.Xna.Framework.Vector2(0, 250), screenWidth, _gameTime));
                 xWingActive_1 = true;
             }
             if (elapsedTime > 3 && xWingActive_2 != true)
             {
-                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, bulletManager, new Microsoft.Xna.Framework.Vector2(0, 200), screenWidth, _gameTime));
+                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, new Microsoft.Xna.Framework.Vector2(0, 200), screenWidth, _gameTime));
                 xWingActive_2 = true;
             }
             if (elapsedTime > 4 && xWingActive_3 != true)
             {
-                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, bulletManager, new Microsoft.Xna.Framework.Vector2(0, 150), screenWidth, _gameTime));
+                entityManager.AddEntity_EnemyA(new EnemyA(xWing, blasterGreen, new Microsoft.Xna.Framework.Vector2(0, 150), screenWidth, _gameTime));
                 xWingActive_3 = true;
             }
 
 
             if (elapsedTime > 5 && bossActive_A != true)
             {
-                entityManager.AddEntity_BossA(new BossA(bossATexture, blasterGreen, bulletManager, new Microsoft.Xna.Framework.Vector2(screenWidth, 25), screenWidth, _gameTime));
+                entityManager.AddEntity_BossA(new BossA(bossATexture, blasterGreen, new Microsoft.Xna.Framework.Vector2(screenWidth, 25), screenWidth, _gameTime));
                 bossActive_A = true;
             }
 
 
             if (elapsedTime > 10 && aWingActive_1 != true)
             {
-                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, bulletManager, new Microsoft.Xna.Framework.Vector2(screenWidth, 380), screenWidth, _gameTime));
+                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, new Microsoft.Xna.Framework.Vector2(screenWidth, 380), screenWidth, _gameTime));
                 aWingActive_1 = true;
             }
             if (elapsedTime > 11 && aWingActive_2 != true)
             {
-                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, bulletManager, new Microsoft.Xna.Framework.Vector2(screenWidth, 340), screenWidth, _gameTime));
+                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, new Microsoft.Xna.Framework.Vector2(screenWidth, 340), screenWidth, _gameTime));
                 aWingActive_2 = true;
             }
             if (elapsedTime > 12 && aWingActive_3 != true)
             {
-                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, bulletManager, new Microsoft.Xna.Framework.Vector2(screenWidth, 300), screenWidth, _gameTime));
+                entityManager.AddEntity_EnemyB(new EnemyB(aWing, blasterBlue, new Microsoft.Xna.Framework.Vector2(screenWidth, 300), screenWidth, _gameTime));
                 aWingActive_3 = true;
             }
 
 
             if (elapsedTime > 20 && bossActive_B != true)
             {
-                entityManager.AddEntity_BossB(new BossB(rebelScum, blasterGreen, blasterBlue, bulletManager, new Microsoft.Xna.Framework.Vector2(0, 50), screenWidth, _gameTime));
+                entityManager.AddEntity_BossB(new BossB(rebelScum, blasterGreen, blasterBlue, new Microsoft.Xna.Framework.Vector2(0, 50), screenWidth, _gameTime));
                 bossActive_B = true;
             }
 
@@ -174,29 +190,43 @@ namespace CPTS587
 
         protected override void Draw(GameTime gameTime)
         {
+            
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
             
-
-
             spriteBatch.Begin();
+
+            //gameOver.Draw();
 
             spriteBatch.Draw(backgroundTexture, backgroundPos, Color.White);
             spriteBatch.Draw(weGotDeathStar, weGotDeathStarPos, Color.White);
-            
+
 
             //spriteBatch.Draw(SpaceShip, new Rectangle(0, 0, 100, 100), Color.White);
+            
 
             player.Draw(spriteBatch);
+            healthbar.Draw(spriteBatch);
             //enemyA.Draw(spriteBatch);
 
             entityManager.Draw(spriteBatch);
             bulletManager.Draw(spriteBatch);
+            // Get the current state of the keyboard
+
+   
+            if (!player.IsPlayerAlive())
+            {
+                gameOver.Draw();
+            }
+ 
+
+
 
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
     }
+
 }
