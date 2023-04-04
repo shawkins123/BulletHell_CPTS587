@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CPTS587.Entities;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using BulletHell_CPTS587;
+using System.Diagnostics;
 
 namespace CPTS587
 {
@@ -28,10 +30,12 @@ namespace CPTS587
         public int Lives { get; set;}
 
         private float endTime;
+        public float playerTimer;
 
-     //   private HealthBar healthBar;
+        //   private HealthBar healthBar;
+        private GameOver gameOver;
 
-        public Player(Texture2D texture, int inpScreenWidth, int inpScreenHeight, HealthBar healthBarInput)
+        public Player(Texture2D texture, int inpScreenWidth, int inpScreenHeight, HealthBar healthBarInput, GameOver gameOver)
         {
             Texture = texture;
 
@@ -42,7 +46,8 @@ namespace CPTS587
             lives = 4;
             isAlive = true;
             setPosition();
-      //      healthBar = healthBarInput;
+            //      healthBar = healthBarInput;
+            this.gameOver = gameOver ?? throw new ArgumentNullException(nameof(gameOver), "Object cannot be null.");
             Bounds = new Rectangle((int)position.X, (int)position.Y, Texture.Width, Texture.Height);
         }
 
@@ -55,11 +60,16 @@ namespace CPTS587
         //deliverable = after player is hit, must respawn and gain invincibility for short time
         public void Update(GameTime gameTime)
         {
-            if(isAlive == true)
+            playerTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            //Debug.WriteLine("playerTimer =" + playerTimer);
+
+            if (isAlive == true)
             {            
-                if(isInvincible == true && (float)gameTime.ElapsedGameTime.TotalSeconds == endTime)
+                if(isInvincible == true && playerTimer >= endTime)
                 {
                     isInvincible = false;
+                    playerTimer = 0;
                 }          
 
                 //for collision detection
@@ -95,6 +105,11 @@ namespace CPTS587
         public void Die()
         {
             isAlive = false;
+        }
+
+        public bool IsPlayerAlive()
+        {
+            return isAlive;
         }
 
     }

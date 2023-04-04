@@ -81,6 +81,8 @@ namespace BulletHell_CPTS587.System
 
             _timeSinceLastSpeedChange += gameTime.ElapsedGameTime.TotalSeconds;
 
+            if (_pc.IsPlayerAlive())
+            {
 
             if (keyState.IsKeyDown(Keys.Up) && _pc.position.Y > 0)
             {
@@ -143,6 +145,7 @@ namespace BulletHell_CPTS587.System
                     _pc.position.Y += (speed * 0.5f)/4;
                 }
 
+                }
             }
 
         }
