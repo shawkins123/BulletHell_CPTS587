@@ -6,11 +6,13 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Numerics;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Text;
+using System.Xml.Linq;
 
 namespace CPTS587
 {
@@ -59,6 +61,10 @@ namespace CPTS587
 
         private HealthBar healthbar;
 
+
+        public GameOver gameOver;
+        private SpriteFont Arial;
+
         public Game1()
         {
 
@@ -102,8 +108,10 @@ namespace CPTS587
             screenHeight = GraphicsDevice.Viewport.Bounds.Height;
             ISD = Content.Load<Texture2D>("ISD");
 
-           
-            player = new Player(ISD, screenWidth, screenHeight, healthbar);
+            Arial = content.Load<SpriteFont>("Ariall");
+            gameOver = new GameOver(screenHeight, screenWidth, Arial, spriteBatch, GraphicsDevice);
+
+            player = new Player(ISD, screenWidth, screenHeight, healthbar, gameOver);
             healthbar = new HealthBar(player, GraphicsDevice);
             bulletManager = new BulletManager(player);
             inputController = new InputController(player, bulletManager, blasterGreen);
@@ -249,7 +257,12 @@ namespace CPTS587
             entityManager.Draw(spriteBatch);
             bulletManager.Draw(spriteBatch);
 
-            
+   
+            if (!player.IsPlayerAlive())
+            {
+                gameOver.Draw();
+            }
+ 
 
 
             spriteBatch.End();
