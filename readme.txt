@@ -35,3 +35,11 @@ At the bottom of the "General" tab, check the "Unblock" checkbox.
 Click the "Apply" button. 
 
 A screenshot of the above menu can be found saved in the file "Windows Security Fix.png"
+
+Another issue we have is loading the SpriteFont(content.Load<SpriteFont>). Even if we have the sprit font in the content folder (Arial.spritefont),
+program not able to load it properly. To fix this:
+1. Double click Content.mgcb from the contnet folder
+2. Add new item and give it a unique fileName
+3. Choose SpriteFont Description (.spriteFOnt)
+4. Hit Create and save it
+5. Copy the fileName and update the file name in Arial = content.Load<SpriteFont>("fileName"); (Code line #111 in Game1.cs class)
