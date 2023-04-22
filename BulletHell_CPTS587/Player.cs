@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 namespace CPTS587
 {
-    public class Player
+    public class Player : ISubject
     {
         public Vector2 position;
 
@@ -32,10 +32,11 @@ namespace CPTS587
         private float endTime;
         public float playerTimer;
 
-        //   private HealthBar healthBar;
         private GameOver gameOver;
 
-        public Player(Texture2D texture, int inpScreenWidth, int inpScreenHeight, HealthBar healthBarInput, GameOver gameOver)
+        private List<IObserver> _observers = new List<IObserver>();
+
+        public Player(Texture2D texture, int inpScreenWidth, int inpScreenHeight, GameOver gameOver)
         {
             Texture = texture;
 
@@ -46,14 +47,12 @@ namespace CPTS587
             lives = 4;
             isAlive = true;
             setPosition();
-            //      healthBar = healthBarInput;
-            this.gameOver = gameOver ?? throw new ArgumentNullException(nameof(gameOver), "Object cannot be null.");
+        //    this.gameOver = gameOver ?? throw new ArgumentNullException(nameof(gameOver), "Object cannot be null.");
             Bounds = new Rectangle((int)position.X, (int)position.Y, Texture.Width, Texture.Height);
         }
 
         private void setPosition()
         {
-     //       healthBar.setupHealthBar();
             position = new Vector2(screenWidth / 2 - entityWidth / 2, screenHeight - entityHeight);          
         }
 
@@ -61,6 +60,7 @@ namespace CPTS587
         public void Update(GameTime gameTime)
         {
             playerTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+           
 
             //Debug.WriteLine("playerTimer =" + playerTimer);
 
@@ -90,8 +90,9 @@ namespace CPTS587
         public void IsHit(GameTime gameTime)
         {
             if(isInvincible == false)
-            { 
+            {               
                 lives -= 1;
+                this.Notify();
 
                 if (lives == 0)
                     Die();
@@ -111,6 +112,37 @@ namespace CPTS587
         {
             return isAlive;
         }
+        public int getLives()
+        {
+            return lives;
+        }
 
+        public void Attach(IObserver observer)
+        {
+            this._observers.Add(observer);
+        }
+
+        public void Detach(IObserver observer)
+        {
+            this._observers.Remove(observer);
+        }
+
+        public void Notify()
+        {
+            foreach (var observer in _observers)
+            {
+                observer.Update(this);
+            }
+        }
+
+        public void addLife()
+        {
+            if(lives <= 3)
+            { 
+                lives += 1;
+                this.Notify();
+            }
+
+        }
     }
 }
