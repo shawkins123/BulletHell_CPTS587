@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 using System.Net.NetworkInformation;
+using BulletHell_CPTS587;
 
 namespace CPTS587.Entities
 {
@@ -14,6 +15,7 @@ namespace CPTS587.Entities
     {
         private List<Ship> ShipList = new List<Ship>();
         private List<Bullet> Bullets;
+        private List<HealthPowerup> PowerupList = new List<HealthPowerup>();
 
         private BulletManager _bulletManager;
 
@@ -32,9 +34,29 @@ namespace CPTS587.Entities
             Bullets.Add(entity);
         }
 
+        public void AddPowerup(HealthPowerup powerup)
+        {
+            PowerupList.Add(powerup);
+        }
+
         public void Update(GameTime gameTime)
         {
             manageShips(gameTime);
+           
+            for(int i = 0; i < PowerupList.Count; i++)
+            {
+
+                if (PowerupList[i].isActive == true)
+                {
+                    PowerupList[i].Update(gameTime);
+                }
+                else
+                {
+                    PowerupList.RemoveAt(i);
+                    i--;
+                }
+            }
+
         }
 
         private void manageShips(GameTime gameTime)
@@ -81,6 +103,11 @@ namespace CPTS587.Entities
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            
+            foreach(HealthPowerup hp in PowerupList)
+            {
+                hp.Draw(spriteBatch);
+            }
 
             foreach (Ship ship in ShipList)
             {
@@ -91,6 +118,8 @@ namespace CPTS587.Entities
             {
                 entity.Draw(spriteBatch);
             }
+          
         }
+
     }
 }

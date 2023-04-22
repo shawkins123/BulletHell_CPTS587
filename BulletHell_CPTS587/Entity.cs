@@ -51,9 +51,11 @@ namespace CPTS587.Entities
         bool moveUp = false;
 
         private Movement _movement;
+        private PowerupManager _powerupManager;
 
 
-        public Ship(int health, string name, Texture2D texture, Microsoft.Xna.Framework.Vector2 inpPosition, int inpScreenWidth, GameTime gameTime, float zigZag = 0.0f)
+        public Ship(int health, string name, Texture2D texture, Microsoft.Xna.Framework.Vector2 inpPosition, 
+            int inpScreenWidth, GameTime gameTime, PowerupManager pm, float zigZag = 0.0f)
         {
             this.Texture = texture;
             this.shipHealth = health;
@@ -74,7 +76,7 @@ namespace CPTS587.Entities
 
             _movement = movement;
             this.zigZag = zigZag;
-            
+            _powerupManager = pm;
         }
 
         public void AddLaser(Laser laser)
@@ -150,6 +152,12 @@ namespace CPTS587.Entities
             if (shipHealth <= 0)
             {
                 Active = false;
+
+                // 1/3 chance to drop powerup
+                Random rand = new Random();
+                int value = rand.Next(3);
+                if(value == 2)                   
+                    _powerupManager.AddEntity_Powerup(position);
             }
         }
 

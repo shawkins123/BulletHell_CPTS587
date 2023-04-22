@@ -16,9 +16,9 @@ namespace CPTS587.Entities
     {
         public ShipFactory() { }
 
-        public static Ship createShip(int health, string name, Texture2D texture, Vector2 inpPosition, int inpScreenWidth, GameTime gameTime, float zigZag = 0.0f)
+        public static Ship createShip(int health, string name, Texture2D texture, Vector2 inpPosition, int inpScreenWidth, GameTime gameTime, PowerupManager pm, float zigZag = 0.0f)
         {
-            return new Ship(health, name, texture, inpPosition, inpScreenWidth, gameTime, zigZag);
+            return new Ship(health, name, texture, inpPosition, inpScreenWidth, gameTime, pm, zigZag);
         }
 
         public static Ship AddLaser(Ship rawShip, int laserHealth, string laserName,
