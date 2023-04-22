@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Ship>
+	
+	<name>T-65B X-wing</name>
+	<health>25</health>
+	<startPos>(0,350)</startPos>
+	<speed>200.0f</speed>
+	<texture>x-wing</texture>
+	<zigZag>0.75f</zigZag>
+	
+	<Lasers>
+		<Laser>
+			<name>KX9 Laser Cannon</name>
+			<health>25</health>
+			<texture>blasterGreen</texture>
+			<speed>300f</speed>
+		</Laser>
+		<Laser>
+			<name>KX9 Laser Cannon</name>
+			<health>25</health>
+			<texture>blasterGreen</texture>
+			<speed>300f</speed>
+		</Laser>
+	</Lasers>
+	
+</Ship>

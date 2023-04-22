@@ -13,32 +13,42 @@ namespace BulletHell_CPTS587
         Vector2 position;
         public Texture2D Texture;
         public GraphicsDevice gd;
-        private int sub = 20;
+
 
         public Hitpoint(GraphicsDevice gd, Vector2 positionInput)
         {
-            Texture2D hitPointBox = new Texture2D(gd, sub, sub);
-            setColor(hitPointBox, sub);
-            position = positionInput;
-            Texture = hitPointBox;
+            Texture2D hitPoint = new Texture2D(gd, 20, 20);
+            setColor(hitPoint);
+            Vector2 position = positionInput;
         }
 
-        private static void setColor(Texture2D hitPointBox, int sub)
+        private static void setColor(Texture2D hitPoint)
         {
-            Color[] data = new Color[sub * sub];
+            Color[] data = new Color[20 * 20];
             for (int i = 0; i < data.Length; ++i) data[i] = Color.White;
-            hitPointBox.SetData(data);
+            hitPoint.SetData(data);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, position, Color.White);
         }
+        /*
+        Texture2D rectangleX;
 
-        public int getSub()
-        {
-            return sub;
-        }
+
+
+        Texture2D rectangle = new Texture2D(GraphicsDevice, 20, 20);
+        rectangleX = rectangle; 
+
+        Color[] data = new Color[20 * 20];
+            for (int i = 0; i<data.Length; ++i) data[i] = Color.Chocolate;
+            rectangleX.SetData(data);
+
+            Microsoft.Xna.Framework.Vector2 coor = new Microsoft.Xna.Framework.Vector2(20, 20);
+        spriteBatch.Draw(rectangleX, coor, Color.White);
+
+        */
 
     }
 }

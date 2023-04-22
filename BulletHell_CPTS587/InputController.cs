@@ -19,8 +19,6 @@ namespace BulletHell_CPTS587.System
         private BulletManager _bulletManager;
 
         private bool hasFireButtonBeenPressed;
-        //cheatmode
-        private bool hasCheatButtonBeenPressed;
 
         private double _timeSinceLastSpeedChange = 0;
         private double _speedChangeInterval = 0.5;
@@ -32,10 +30,14 @@ namespace BulletHell_CPTS587.System
         private int entityWidth = 20; //change value?
         private int entityHeight = 40; //change value?
 
-        public InputController(Player pc, BulletManager bulletManager) // BulletManager bulletManager)
+        Texture2D BlasterGreen;
+        
+
+        public InputController(Player pc, BulletManager bulletManager, Texture2D green) // BulletManager bulletManager)
         {
             _pc = pc;
             _bulletManager = bulletManager;
+            BlasterGreen = green;
         }
         public void processControls(GameTime gameTime)
         {
@@ -50,46 +52,28 @@ namespace BulletHell_CPTS587.System
                 moveShip(gameTime, keyState, speedVar);
             }
 
-            if (keyState.IsKeyDown(Keys.F) && hasFireButtonBeenPressed == false)
+            if (keyState.IsKeyDown(Keys.Space) && hasFireButtonBeenPressed == false)
             {
                 fireBullet(gameTime);
                 hasFireButtonBeenPressed = true;
+
+                Vector2 position;
+                position.X = _pc.position.X + 30; // should change this so that it's not hard-coded
+                position.Y = _pc.position.Y;
+                _bulletManager.AddEntity_Bullet(new Bullet(BlasterGreen, position, new Vector2(0, -5), true));
             }
 
-            if (keyState.IsKeyUp(Keys.F))
+            if (keyState.IsKeyUp(Keys.Space))
             {
                 hasFireButtonBeenPressed = false;
             }
 
-            //cheatmode
-            if (keyState.IsKeyDown(Keys.W) && hasCheatButtonBeenPressed == false)
-            {
-                activateCheatMode();
-                hasCheatButtonBeenPressed = true;
-            }
-
-            if (keyState.IsKeyUp(Keys.W))
-            {
-                deactivateCheatMode();
-                hasCheatButtonBeenPressed = false;
-            }
-
-
         }
 
-        public void activateCheatMode()
-        {
-            _pc.isCheating = true;
-        }
-
-        public void deactivateCheatMode()
-        {
-            _pc.isCheating = false;
-        }
-
+       
         public void fireBullet(GameTime gameTime)
         {
-            //  _bulletManager.fire(_pc.position.Y, _pc.position.X);
+            //_bulletManager.fire(_pc.position.Y, _pc.position.X);
         }     
 
         public void moveShip(GameTime gameTime, KeyboardState keyState, float speed)
@@ -97,6 +81,8 @@ namespace BulletHell_CPTS587.System
 
             _timeSinceLastSpeedChange += gameTime.ElapsedGameTime.TotalSeconds;
 
+            if (_pc.IsPlayerAlive())
+            {
 
             if (keyState.IsKeyDown(Keys.Up) && _pc.position.Y > 0)
             {
@@ -159,6 +145,7 @@ namespace BulletHell_CPTS587.System
                     _pc.position.Y += (speed * 0.5f)/4;
                 }
 
+                }
             }
 
         }

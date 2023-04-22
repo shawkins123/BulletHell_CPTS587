@@ -32,14 +32,27 @@ namespace BulletHell_CPTS587
 
             return X;
         }
-
-
+       
         public float moveLeft(float X)
         {
             X = _position.X - _speed * _elapsedTime;
 
             return X;
         }
+
+        public float moveUp(float Y)
+        {
+            Y = _position.Y + _speed * _elapsedTime;
+
+            return Y;
+        }
+        public float moveDown(float Y)
+        {
+            Y = _position.Y - _speed * _elapsedTime;
+
+            return Y;
+        }
+
 
     }
 }
