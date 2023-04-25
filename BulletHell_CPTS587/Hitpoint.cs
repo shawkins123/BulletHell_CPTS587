@@ -13,10 +13,11 @@ namespace BulletHell_CPTS587
         Vector2 position;
         public Texture2D Texture;
         public GraphicsDevice gd;
-        private int sub = 20;
+        private int sub;
 
-        public Hitpoint(GraphicsDevice gd, Vector2 positionInput)
+        public Hitpoint(GraphicsDevice gd, Vector2 positionInput, int sub)
         {
+            this.sub = sub;
             Texture2D hitPointBox = new Texture2D(gd, sub, sub);
             setColor(hitPointBox, sub);
             position = positionInput;

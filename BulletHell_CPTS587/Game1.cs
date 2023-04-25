@@ -116,7 +116,7 @@ namespace CPTS587
             player = new Player(ISD, screenWidth, screenHeight, gameOver);
             PlayerObserver observer = new PlayerObserver();
             player.Attach(observer);
-            healthbar = new HealthBar(player, GraphicsDevice, screenHeight, screenWidth);
+            healthbar = new HealthBar(player, GraphicsDevice, screenHeight, screenWidth, 20);
             observer.setHealthBar(healthbar);
             healthbar.updateHealthBar();
             

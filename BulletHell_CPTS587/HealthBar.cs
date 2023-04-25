@@ -22,14 +22,16 @@ namespace BulletHell_CPTS587
         private int screenHeight;
         private int screenWidth;
         private int offset = 200;
+        private int sub;
 
-        public HealthBar(Player player, GraphicsDevice gd, int screenHeight, int screenWidth)
+        public HealthBar(Player player, GraphicsDevice gd, int screenHeight, int screenWidth, int sub)
         {
             this.player = player;
             this.gd = gd;
             Hitpoints = new List<Hitpoint>();
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
+            this.sub = sub;
         }
 
         public void updateHealthBar()
@@ -37,12 +39,12 @@ namespace BulletHell_CPTS587
             Hitpoints.Clear();
             int count = player.getLives();
             
-            for (int i = 0; i < count + 1; i++)
+            for (int i = 0; i < count; i++)
             {
-                Hitpoint hp = new Hitpoint(gd, position);
-                int sub = hp.getSub();
+                Vector2 position;
                 position.Y = screenHeight - sub;
                 position.X = screenWidth - offset - (sub * i);
+                Hitpoint hp = new Hitpoint(gd, position, sub);       
                 Hitpoints.Add(hp);
             }
         }
