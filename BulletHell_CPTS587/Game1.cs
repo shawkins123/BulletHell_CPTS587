@@ -13,6 +13,7 @@ using System.Runtime.Serialization;
 using System.IO;
 using System.Text;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework.Media;
 
 namespace CPTS587
 {
@@ -66,6 +67,8 @@ namespace CPTS587
 
         public GameOver gameOver;
         private SpriteFont Arial;
+        SoundManager soundManager;
+        bool iKeyPressed = false;
 
       
 
@@ -131,6 +134,9 @@ namespace CPTS587
             bossATexture = Content.Load<Texture2D>("BossA");
             aWing = Content.Load<Texture2D>("AWing");
             rebelScum = Content.Load<Texture2D>("BossB");
+
+            Song backgroundMusic = Content.Load<Song>("backgroundMusic");
+            soundManager = new SoundManager(backgroundMusic);
         }
 
         protected override void Update(GameTime _gameTime)
@@ -151,6 +157,19 @@ namespace CPTS587
             bulletManager.Update(_gameTime);
             pm.Update(_gameTime);
 
+            soundManager.Update(_gameTime);
+
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.I))
+            {
+                iKeyPressed = true;
+            }
+
+            if (iKeyPressed)
+            {
+                player.addLife();
+            }
             player.Update(_gameTime);
 
 
@@ -269,7 +288,7 @@ namespace CPTS587
     
             if (!player.IsPlayerAlive())
             {
-                gameOver.Draw();
+                //gameOver.Draw();
             }
  
             spriteBatch.End();
