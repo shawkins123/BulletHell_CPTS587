@@ -1,0 +1,132 @@
+[
+  {
+    "finished": false,
+    "ships": [
+      "xWing",
+      "xWing",
+      "xWing"
+    ],
+    "activated": [
+      false,
+      false,
+      false
+    ],
+    "entranceTime": [
+      5,
+      6,
+      7
+    ],
+    "exitTime": [
+      15,
+      16,
+      17
+    ],
+    "movePattern": [
+      0.75,
+      0.65,
+      0.55
+    ],
+    "start_X": [
+      "R",
+      "R",
+      "R"
+    ],
+    "start_Y": [
+      350,
+      300,
+      250
+    ]
+  },
+
+
+  {
+    "finished": false,
+    "ships": [
+      "Frigate"
+    ],
+    "activated": [
+      false
+    ],
+    "entranceTime": [
+      20
+    ],
+    "exitTime": [
+      40
+    ],
+    "movePattern": [
+      0
+    ],
+    "start_X": [
+      "L"
+    ],
+    "start_Y": [
+      20
+    ]
+  },
+
+
+  {
+    "finished": false,
+    "ships": [
+      "aWing",
+      "aWing",
+      "aWing"
+    ],
+    "activated": [
+      false,
+      false,
+      false
+    ],
+    "entranceTime": [
+      45,
+      47,
+      49
+    ],
+    "exitTime": [
+      55,
+      57,
+      59
+    ],
+    "movePattern": [
+      0.50,
+      0.50,
+      0.50
+    ],
+    "start_X": [
+      "L",
+      "L",
+      "L"
+    ],
+    "start_Y": [
+      300,
+      400,
+      500
+    ]
+  },
+
+  {
+    "finished": false,
+    "ships": [
+      "Cruiser"
+    ],
+    "activated": [
+      false
+    ],
+    "entranceTime": [
+      65
+    ],
+    "exitTime": [
+      95
+    ],
+    "movePattern": [
+      0
+    ],
+    "start_X": [
+      "R"
+    ],
+    "start_Y": [
+      10
+    ]
+  }
+
+]
